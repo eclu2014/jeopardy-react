@@ -1,19 +1,29 @@
 import React from "react";
 import "./App.js";
 import "./page.css";
+import DatePicker from "react-datepicker";
 
 export default class Refine extends React.Component {
 	state = {
 		difficulty: "",
 		category: "",
-		month: "",
-		day: "",
-		year: "",
+		//minDate: new Date(),
+		//maxDate: new Date()
+		minDate: "",
+		maxDate: "",
 	}
 
 	change = e => {
 		this.setState({[e.target.name]: e.target.value});
 	};
+
+/*	handleChange = date  => {
+		this.props.handleChange();
+	}
+
+	handleChange2 = date => {
+		this.props.handleChange2();
+	}*/
 
 	onSubmit = e => {
 		e.preventDefault();
@@ -21,9 +31,8 @@ export default class Refine extends React.Component {
 		this.setState({
 			difficulty: "",
 			category: "",
-			month: "",
-			day: "",
-			year: "",
+			minDate: "",
+			maxDate: "",
 		});
 	}
 	
@@ -42,11 +51,12 @@ export default class Refine extends React.Component {
 					<input type="text" name="category" value={this.state.category} onChange={e => this.change(e)}/>
 				</div>
 				<div style={{ display: "inline-block", margin: "15px" }}>
-					Date:
-					<div style={{ display: "inline-block"  }}><input type="text" name="month" placeholder="Month" value={this.state.month} onChange={e => this.change(e)}/>
-					<input type="text" name="day" placeholder="Day" value={this.state.day} onChange={e => this.change(e)}/>
-					<input type="text" name="year" placeholder="Year" value={this.state.year} onChange={e => this.change(e)}/>
-					</div>
+					Start Date:
+					<input type="text" name="minDate" placeholder="YYYY-MM-DD" value={this.state.minDate} onChange={e => this.change(e)}/>
+				</div>
+				<div style={{ display: "inline-block", margin: "15px" }}>
+					End Date:
+					<input type="text" name="maxDate" placeholder="YYYY-MM-DD" value={this.state.maxDate} onChange={e => this.change(e)}/>
 				</div>	       	
 			</form>
 			<br />

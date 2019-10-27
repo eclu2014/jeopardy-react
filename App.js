@@ -17,15 +17,10 @@ class App extends Component {
 			data: [],
 			searched: false,
 			isLoaded: false,
-			question: [],
-			answer: [],
-			value: [],
-			category: [],
-			airDate: [],
-			id: []
 		}
 	}
 
+	//loads in clues
 	componentDidMount() {
 		fetch('http://jservice.io/api/clues')
 			.then(res => res.json())
@@ -37,6 +32,7 @@ class App extends Component {
 			})
 	}
 
+	//handles submit button function and checks to see if search parameters match with items existing in data table
 	onSubmit = fields => {
 		this.setState({ fields });
 		
@@ -44,13 +40,21 @@ class App extends Component {
 			let base = "http://jservice.io/api/clues?";
 			let searchVal = "value=";
 			let searchCat = "&category=";
+			let minDate = "&min_date=";
+			let maxDate = "&max_date=";
 			if (typeof fields.difficulty !== "undefined") {
 				searchVal += fields.difficulty;
 			} 
 			if (typeof fields.category !== "undefined") {
 				searchCat += fields.category; 
 			}
-			let url = base + searchVal + searchCat;
+			if (typeof fields.minDate !== "undefined") {
+				minDate += fields.minDate + "T12:00:00.000Z";
+			}			
+			if (typeof fields.maxDate !== "undefined") {
+				maxDate += fields.maxDate + "T12:00:00.000Z";
+			}
+			let url = base + searchVal + searchCat + minDate + maxDate;
 			fetch(url)
 			.then(res => res.json())
 				.then(json => {
@@ -61,17 +65,25 @@ class App extends Component {
 			});
 		} else {
 			let refined = [];
-			let add = true;
 			for (var i = 0; i < this.state.data.length; i++) {
 				if (typeof fields.difficulty == "undefined" && typeof fields.category == "undefined")
 					break;
 				let searchVal = "";
 				let searchCat = "";
+				let searchMin = "";
+				let searchMax = "";
 				if (typeof fields.difficulty !== "undefined") {
 					searchVal = fields.difficulty;
 				}
 				if (typeof fields.category !== "undefined")
 					searchCat = fields.category;
+				if (typeof fields.minDate !== "undefined") {
+					searchMin += fields.minDate + "T12:00:00.000Z";
+				}			
+				if (typeof fields.maxDate !== "undefined") {
+					searchMax += fields.maxDate + "T12:00:00.000Z";
+				}
+				let dataDate = JSON.stringify(this.state.data[i].airdate);
 				let dataVal = JSON.stringify(this.state.data[i].value);
 				let dataCat = JSON.stringify(this.state.data[i].category_id);
 				if (searchCat !== "" && searchVal !== "") {
@@ -86,22 +98,36 @@ class App extends Component {
 				}
 			}
 			this.setState({ data: refined });
+			refined = [];
+			for (var i = 0; i < this.state.data.length; i++) {
+				let searchMin = "";
+				let searchMax = "";
+				if (typeof fields.minDate !== "undefined") {
+					searchMin += fields.minDate + "T12:00:00.000Z";
+				}			
+				if (typeof fields.maxDate !== "undefined") {
+					searchMax += fields.maxDate + "T12:00:00.000Z";
+				}
+				let dataDate = JSON.stringify(this.state.data[i].airdate);
+				if (searchMin !== "" && searchMax !== "") {
+					if (searchMin <= dataDate && searchMax >= dataDate)
+						refined.push(this.state.data[i]);
+				} else if (searchMin == "" && searchMax !== "") {
+					if (searchMax >= dataDate)
+						refined.push(this.state.data[i]);
+				} else {
+					if (searchMin <= dataDate)
+						refined.push(this.state.data[i]);
+				}
+
+			}
+			this.setState({ data: refined });
 		}
 	}
 
+	//filters items in data array to items containing search input
 	onSearch = fields => {
 		this.setState({ fields });
-		/*if (this.state.searched === true) {
-			fetch("http://jservice.io/api/clues")
-            	  .then(res => res.json())
-                	  .then(json => {
-                  	this.setState({
-                    	  isLoaded: true,
-                       	  data: json,
-						  searched: false
-                 	 })
-              	});
-		}*/
 		let key = fields.input;
 		let s = [];
 		for (var i = 0; i < this.state.data.length; i++) {
@@ -112,6 +138,7 @@ class App extends Component {
 		this.setState({ searched: true, data: s });
 	}
 		
+	//clears search and refine limitations
 	onClear = () => {
 		fetch("http://jservice.io/api/random?count=100")
 			.then(res => res.json())
@@ -122,7 +149,6 @@ class App extends Component {
 				});
 	}
 
-	
 	render() {
 		var { isLoaded, data } = this.state;
 		
