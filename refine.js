@@ -12,15 +12,18 @@ export default class Refine extends React.Component {
 		input: ""
 	}
 
+	//automatically updates state values as input changes in real time in each field
 	change = e => {
 		this.setState({[e.target.name]: e.target.value});
 	};
 
+	//calls App.js onSubmit method to handle submit button click
 	onSubmit = e => {
 		e.preventDefault();
 		this.props.onSubmit(this.state);
 	}
 	
+	//calls App.js onClear method to handle clear button click
 	onClear = e => {
 		this.props.onClear();
 		this.setState({
@@ -32,11 +35,13 @@ export default class Refine extends React.Component {
 		});
 	}
 
+	//calls App.js onSearch method to handle search button click
 	onSearch = e => {
          e.preventDefault();
          this.props.onSearch(this.state);
      }	
 
+	//format form appearance
 	render() {
 		return (
 		  <div style={{ display: "inline-block"  }}>

@@ -18,7 +18,7 @@ class App extends Component {
 		}
 	}
 
-	//loads in clues
+	//loads in clues by fetching from api with offset factor of 100
 	componentDidMount() {
 		let base = "https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=";
 		for (var c = 0; c < 3000; c += 100) {
@@ -36,6 +36,8 @@ class App extends Component {
 	}
 
 	//handles submit button function and checks to see if search parameters match with items existing in data table
+	//sets data array to empty first, then traverses through api using provided parameters in form fields
+	//adds elements to data array and updates the table 
 	onSubmit = fields => {
 		this.setState({ fields });
 			let base = "https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?";
