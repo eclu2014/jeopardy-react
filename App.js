@@ -21,31 +21,33 @@ class App extends Component {
 	//loads in clues by fetching from api with offset factor of 100
 	componentDidMount() {
 		let base = "https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=";
+		let items = [];
 		for (var c = 0; c < 3000; c += 100) {
 			fetch(base+c)
 				.then(res => res.json())
 				.then(json => {
-					console.log(json);
 					this.setState({
 						data: this.state.data.concat(json),
 						isLoaded: true
 					})
 				})
 		}
-
 	}
 
 	//handles submit button function and checks to see if search parameters match with items existing in data table
 	//sets data array to empty first, then traverses through api using provided parameters in form fields
 	//adds elements to data array and updates the table 
+	//checks through data fields after fetching api to re-configure search limitations
 	onSubmit = fields => {
 		this.setState({ fields });
+		if (fields.difficulty !== "" || fields.category !== "" || fields.minDate !== "" || fields.maxDate !== ""){
 			let base = "https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?";
 			let searchVal = "value=";
 			let searchCat = "&category=";
 			let minDate = "&min_date=";
 			let maxDate = "&max_date=";
 			let offset = "&offset=";
+			let questions = []
 			if (fields.difficulty !== "") {
 				searchVal += fields.difficulty;
 			}
@@ -59,7 +61,6 @@ class App extends Component {
 				maxDate += fields.maxDate;
 			}
 			let url = base + searchVal + searchCat + minDate + maxDate + offset;
-			console.log(url);
 			if (fields.difficulty !== "" || fields.category !== "" || fields.minDate !== "" || fields.maxDate !== "")
 					this.setState({ data: [] });
 			for (var o = 0; o < 3000; o += 100) {
@@ -69,9 +70,12 @@ class App extends Component {
 					this.setState({
 						isLoaded: true,
 						data: this.state.data.concat(json)
+					}, () => {
+						this.onSearch(fields);
 					})
 				});
 			}
+		}
 	}
 
 	//filters items in data array to items containing search input
@@ -109,7 +113,6 @@ class App extends Component {
 
 	render() {
 		var { isLoaded, data } = this.state;
-
 		if (!isLoaded) {
 			return <div>Loading...</div>;
 		}
@@ -118,6 +121,7 @@ class App extends Component {
 			return (
     			<div className="App">
 				<h1>Jeopardy Question Bank</h1>
+				<h5>Please give the page up to 10 seconds to load before searching...</h5>
 				<div style={{ textAlign: "center", display: "block"  }}>
 		  			<Refine onSearch={fields => this.onSearch(fields)} onSubmit={fields => this.onSubmit(fields)} onClear={() => this.onClear()}/>
 				</div>
