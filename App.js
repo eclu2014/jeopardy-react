@@ -159,12 +159,6 @@ class App extends Component {
 							width: 80
 						}
 					]}
-					defaultSorted={[
-						{
-							id: "id",
-							asc: true
-						}
-					]}
 					defaultPageSize={50}
 					className="-striped -highlight"
 					/>
