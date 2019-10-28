@@ -51,7 +51,7 @@ export default class Refine extends React.Component {
 			<h3>Refine by:</h3>
 			<form align="center">
 				<div style={{ display: "inline-block", margin: "15px" }}>
-					Difficulty:
+					Value:
 					<input type="text" name="difficulty" value={this.state.difficulty} onChange={e => this.change(e)}/>
 				</div>
 				<div style={{ display: "inline-block", margin: "15px" }}>
