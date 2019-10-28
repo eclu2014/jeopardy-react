@@ -7,39 +7,42 @@ export default class Refine extends React.Component {
 	state = {
 		difficulty: "",
 		category: "",
-		//minDate: new Date(),
-		//maxDate: new Date()
 		minDate: "",
 		maxDate: "",
+		input: ""
 	}
 
 	change = e => {
 		this.setState({[e.target.name]: e.target.value});
 	};
 
-/*	handleChange = date  => {
-		this.props.handleChange();
-	}
-
-	handleChange2 = date => {
-		this.props.handleChange2();
-	}*/
-
 	onSubmit = e => {
 		e.preventDefault();
 		this.props.onSubmit(this.state);
+	}
+	
+	onClear = e => {
+		this.props.onClear();
 		this.setState({
 			difficulty: "",
 			category: "",
 			minDate: "",
 			maxDate: "",
+			input: ""
 		});
 	}
-	
+
+	onSearch = e => {
+         e.preventDefault();
+         this.props.onSearch(this.state);
+     }	
 
 	render() {
 		return (
 		  <div style={{ display: "inline-block"  }}>
+			Search:
+			 <input type="text" name="input" value={this.state.input} onChange={e => this.change(e)}/>
+             <button onClick={e => this.onSearch(e)}>Search</button>
 			<h3>Refine by:</h3>
 			<form align="center">
 				<div style={{ display: "inline-block", margin: "15px" }}>
@@ -61,6 +64,9 @@ export default class Refine extends React.Component {
 			</form>
 			<br />
 				<button onClick={e => this.onSubmit(e)}>Submit</button>
+			<br/>
+			<h4>Click "clear" to clear search and refinements</h4>
+			<button onClick={() => this.onClear()}>Clear</button>
 			</div>
 		);
 	}

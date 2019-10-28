@@ -3,13 +3,11 @@ import logo from './logo.svg';
 import './App.css';
 import './page.css';
 import Refine from './refine.js';
-import Search from './search.js';
-import Clear from './clear.js';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 
 class App extends Component {
-	
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -22,107 +20,56 @@ class App extends Component {
 
 	//loads in clues
 	componentDidMount() {
-		fetch('http://jservice.io/api/clues')
-			.then(res => res.json())
-			.then(json => {
-				this.setState({
-					isLoaded: true,
-					data: json,
-				})	
-			})
+		let base = "https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=";
+		for (var c = 0; c < 3000; c += 100) {
+			fetch(base+c)
+				.then(res => res.json())
+				.then(json => {
+					console.log(json);
+					this.setState({
+						data: this.state.data.concat(json),
+						isLoaded: true
+					})
+				})
+		}
+
 	}
 
 	//handles submit button function and checks to see if search parameters match with items existing in data table
 	onSubmit = fields => {
 		this.setState({ fields });
-		
-		if (this.state.searched == false) {
 			let base = "http://jservice.io/api/clues?";
 			let searchVal = "value=";
 			let searchCat = "&category=";
 			let minDate = "&min_date=";
 			let maxDate = "&max_date=";
-			if (typeof fields.difficulty !== "undefined") {
+			let offset = "&offset=";
+			if (fields.difficulty !== "") {
 				searchVal += fields.difficulty;
-			} 
-			if (typeof fields.category !== "undefined") {
-				searchCat += fields.category; 
 			}
-			if (typeof fields.minDate !== "undefined") {
-				minDate += fields.minDate + "T12:00:00.000Z";
-			}			
-			if (typeof fields.maxDate !== "undefined") {
-				maxDate += fields.maxDate + "T12:00:00.000Z";
+			if (fields.category !== "") {
+				searchCat += fields.category;
 			}
-			let url = base + searchVal + searchCat + minDate + maxDate;
-			fetch(url)
-			.then(res => res.json())
-				.then(json => {
-				this.setState({
-					isLoaded: true,
-					data: json,
-				})	
-			});
-		} else {
-			let refined = [];
-			for (var i = 0; i < this.state.data.length; i++) {
-				if (typeof fields.difficulty == "undefined" && typeof fields.category == "undefined")
-					break;
-				let searchVal = "";
-				let searchCat = "";
-				let searchMin = "";
-				let searchMax = "";
-				if (typeof fields.difficulty !== "undefined") {
-					searchVal = fields.difficulty;
-				}
-				if (typeof fields.category !== "undefined")
-					searchCat = fields.category;
-				if (typeof fields.minDate !== "undefined") {
-					searchMin += fields.minDate + "T12:00:00.000Z";
-				}			
-				if (typeof fields.maxDate !== "undefined") {
-					searchMax += fields.maxDate + "T12:00:00.000Z";
-				}
-				let dataDate = JSON.stringify(this.state.data[i].airdate);
-				let dataVal = JSON.stringify(this.state.data[i].value);
-				let dataCat = JSON.stringify(this.state.data[i].category_id);
-				if (searchCat !== "" && searchVal !== "") {
-					if (searchCat == dataCat && searchVal == dataVal)
-						refined.push(this.state.data[i]);
-				} else if (searchCat == "" && searchVal !== "") {
-					if (searchVal == dataVal)
-						refined.push(this.state.data[i]);
-				} else {
-					if (searchCat == dataCat)
-						refined.push(this.state.data[i]);
-				}
+			if (fields.minDate !== "") {
+				minDate += fields.minDate;
 			}
-			this.setState({ data: refined });
-			refined = [];
-			for (var i = 0; i < this.state.data.length; i++) {
-				let searchMin = "";
-				let searchMax = "";
-				if (typeof fields.minDate !== "undefined") {
-					searchMin += fields.minDate + "T12:00:00.000Z";
-				}			
-				if (typeof fields.maxDate !== "undefined") {
-					searchMax += fields.maxDate + "T12:00:00.000Z";
-				}
-				let dataDate = JSON.stringify(this.state.data[i].airdate);
-				if (searchMin !== "" && searchMax !== "") {
-					if (searchMin <= dataDate && searchMax >= dataDate)
-						refined.push(this.state.data[i]);
-				} else if (searchMin == "" && searchMax !== "") {
-					if (searchMax >= dataDate)
-						refined.push(this.state.data[i]);
-				} else {
-					if (searchMin <= dataDate)
-						refined.push(this.state.data[i]);
-				}
-
+			if (fields.maxDate !== "") {
+				maxDate += fields.maxDate;
 			}
-			this.setState({ data: refined });
-		}
+			let url = base + searchVal + searchCat + minDate + maxDate + offset;
+			console.log(url);
+			if (fields.difficulty !== "" || fields.category !== "" || fields.minDate !== "" || fields.maxDate !== "")
+					this.setState({ data: [] });
+			for (var o = 0; o < 3000; o += 100) {
+				fetch(url+o)
+				.then(res => res.json())
+					.then(json => {
+					this.setState({
+						isLoaded: true,
+						data: this.state.data.concat(json)
+					})
+				});
+			}
 	}
 
 	//filters items in data array to items containing search input
@@ -137,39 +84,41 @@ class App extends Component {
 		}
 		this.setState({ searched: true, data: s });
 	}
-		
+
 	//clears search and refine limitations
 	onClear = () => {
-		fetch("http://jservice.io/api/random?count=100")
-			.then(res => res.json())
+		this.setState({
+			data: []
+		})
+		let base = "https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=";
+		for (var o = 0; o < 3000; o += 100) {
+			fetch(base+o)
+				.then(res => res.json())
 				.then(json => {
 					this.setState({
-						data: json	
+						data: this.state.data.concat(json),
+						isLoaded: true
 					})
-				});
+				})
+		}
+
+
 	}
 
 	render() {
 		var { isLoaded, data } = this.state;
-		
+
 		if (!isLoaded) {
 			return <div>Loading...</div>;
 		}
-		
+
 		else {
 			return (
     			<div className="App">
 				<h1>Jeopardy Question Bank</h1>
-				<div style={{ textAlign: "center", display: "block" }}>
-					<Search onSearch={fields => this.onSearch(fields)}/>
+				<div style={{ textAlign: "center", display: "block"  }}>
+		  			<Refine onSearch={fields => this.onSearch(fields)} onSubmit={fields => this.onSubmit(fields)} onClear={() => this.onClear()}/>
 				</div>
-				<div style={{ textAlign: "center", display: "block"  }}>	
-		  			<Refine onSubmit={fields => this.onSubmit(fields)}/>
-				</div>
-				<h4>Click "clear" to clear search and refinements</h4>
-     			<div>
-					<Clear onClear={() => this.onClear()}/>
-				</div>	
 				<div style={{ paddingTop: "50px" }}>
 					<ReactTable
 						data={data}
@@ -177,7 +126,7 @@ class App extends Component {
 						{
 							Header: "ID",
 							accessor: "id",
-							width: 100	
+							width: 100
 						},
 						{
 							Header: "Category ID",
@@ -207,7 +156,7 @@ class App extends Component {
 							Header: "Value",
 							accessor: "value",
 							width: 80
-						}	
+						}
 					]}
 					defaultSorted={[
 						{
