@@ -38,7 +38,7 @@ class App extends Component {
 	//handles submit button function and checks to see if search parameters match with items existing in data table
 	onSubmit = fields => {
 		this.setState({ fields });
-			let base = "http://jservice.io/api/clues?";
+			let base = "https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?";
 			let searchVal = "value=";
 			let searchCat = "&category=";
 			let minDate = "&min_date=";
