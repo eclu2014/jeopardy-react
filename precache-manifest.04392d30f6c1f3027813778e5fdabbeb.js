@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "10c1cefdced316b002d97cb3359226f1",
+    "revision": "733f5b77720c17f61e34365dba598364",
     "url": "/jeopardy-react/index.html"
   },
   {
-    "revision": "4a69965ab079374a494d",
+    "revision": "97329d5faf7fc859635d",
     "url": "/jeopardy-react/static/css/2.11f871ab.chunk.css"
   },
   {
-    "revision": "b206044f4013676b5a6e",
+    "revision": "5c6d0043f59d15d7a4cd",
     "url": "/jeopardy-react/static/css/main.11ff0c6c.chunk.css"
   },
   {
-    "revision": "4a69965ab079374a494d",
-    "url": "/jeopardy-react/static/js/2.f95feb9d.chunk.js"
+    "revision": "97329d5faf7fc859635d",
+    "url": "/jeopardy-react/static/js/2.b6d42fc1.chunk.js"
   },
   {
-    "revision": "b206044f4013676b5a6e",
-    "url": "/jeopardy-react/static/js/main.1c3c070a.chunk.js"
+    "revision": "5c6d0043f59d15d7a4cd",
+    "url": "/jeopardy-react/static/js/main.2feba428.chunk.js"
   },
   {
     "revision": "828829dfe01d7d331c6a",
