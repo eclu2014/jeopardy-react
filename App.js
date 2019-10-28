@@ -130,11 +130,6 @@ class App extends Component {
 						data={data}
 						columns={[
 						{
-							Header: "ID",
-							accessor: "id",
-							width: 100
-						},
-						{
 							Header: "Category ID",
 							accessor: "category_id",
 							width: 130
