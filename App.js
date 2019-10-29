@@ -22,7 +22,7 @@ class App extends Component {
 	componentDidMount() {
 		let base = "https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=";
 		let items = [];
-		for (var c = 0; c < 1000; c += 100) {
+		for (var c = 0; c < 500; c += 100) {
 			fetch(base+c)
 				.then(res => res.json())
 				.then(json => {
@@ -63,8 +63,7 @@ class App extends Component {
 			let url = base + searchVal + searchCat + minDate + maxDate + offset;
 			if (fields.difficulty !== "" || fields.category !== "" || fields.minDate !== "" || fields.maxDate !== "")
 					this.setState({ data: [] });
-			let length = this.state.data.length;
-			for (var o = 0; o < length; o += 100) {
+			for (var o = 0; o < 500; o += 100) {
 				fetch(url+o)
 				.then(res => res.json())
 					.then(json => {
@@ -98,7 +97,7 @@ class App extends Component {
 			data: []
 		})
 		let base = "https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=";
-		for (var o = 0; o < 1000; o += 100) {
+		for (var o = 0; o < 500; o += 100) {
 			fetch(base+o)
 				.then(res => res.json())
 				.then(json => {
