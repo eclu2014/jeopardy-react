@@ -21,6 +21,7 @@ class App extends Component {
 	//loads in clues by fetching from api with offset factor of 100
 	componentDidMount() {
 		let base = "https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=";
+//		let base = "http://jservice.io/api/clues?offset=";
 		let items = [];
 		for (var c = 0; c < 500; c += 100) {
 			fetch(base+c)
@@ -121,7 +122,7 @@ class App extends Component {
 			return (
     			<div className="App">
 				<h1>Jeopardy Question Bank</h1>
-				<h5>Please give the page up to 10 seconds to load before searching...</h5>
+				<h5>Please give the page a second to load before searching...</h5>
 				<div style={{ textAlign: "center", display: "block"  }}>
 		  			<Refine onSearch={fields => this.onSearch(fields)} onSubmit={fields => this.onSubmit(fields)} onClear={() => this.onClear()}/>
 				</div>
