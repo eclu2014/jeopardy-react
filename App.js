@@ -122,7 +122,6 @@ class App extends Component {
 			return (
     			<div className="App">
 				<h1>Jeopardy Question Bank</h1>
-				<h5>Please give the page a second to load before searching...</h5>
 				<div style={{ textAlign: "center", display: "block"  }}>
 		  			<Refine onSearch={fields => this.onSearch(fields)} onSubmit={fields => this.onSubmit(fields)} onClear={() => this.onClear()}/>
 				</div>
